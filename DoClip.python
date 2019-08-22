@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+
+import os
+from PIL import Image
+
+
+print("Hello, World!")
+
+# 原始icon文件名，必须与脚本同目录下
+ORIGIN_ICON_PATH = "icon.png"
+# 输出icon的目录和icon文件名
+OUTPUT_ICON_PATH = "proj.android/res/drawable-"
+OUTPUT_ICON_NAME = "icon"
+ICON_SIZE_DICT = {"ldpi": (36, 36), "mdpi": (48, 48), "hdpi": (72, 72), "xhdpi": (96, 96), "xxhdpi": (144, 144)}
+
+# 可以添加一个自动创建
+
+def make_more_images():
+    print("just for run")
+    if not os.path.isfile(ORIGIN_ICON_PATH) and not os.path.exists(ORIGIN_ICON_PATH):
+        print(ORIGIN_ICON_PATH + " is NOT exist.")
+        return
+    im = Image.open(ORIGIN_ICON_PATH)
+    print("origin size: " + im.size.__str__())
+    if im.size[0] != im.size[1]:
+        print("width and height not equal.")
+        return
+    if im.size[0] < ICON_SIZE_DICT.get("xxhdpi")[0]:
+        print("image size is TOO small.")
+        return
+    for dpi, size in ICON_SIZE_DICT.items():
+        path = OUTPUT_ICON_PATH + dpi
+        if not os.path.isdir(path):
+            print("make [" + dpi + ": " + size.__str__() + "] fail. why: " \
+            + os.path.basename(path) + " is invalid folder.")
+            continue
+        path = path + "/" + OUTPUT_ICON_NAME + ".png"
+        if os.path.isfile(path) and os.path.exists(path):
+            os.remove(path)
+        im.resize(size).save(path, "PNG")
+        print("make [" + dpi + ": " + size.__str__() + "] success.")
+
+
+
+'''
+make_more_images()
+dsfdsf
+sdfdsf
+sfsdf
+'''
+make_more_images()
